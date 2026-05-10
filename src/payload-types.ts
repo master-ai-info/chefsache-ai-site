@@ -69,6 +69,10 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    'landing-pages': LandingPage;
+    articles: Article;
+    'legal-pages': LegalPage;
+    leads: Lead;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,13 +82,17 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'landing-pages': LandingPagesSelect<false> | LandingPagesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
+    leads: LeadsSelect<false> | LeadsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {};
@@ -122,7 +130,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -147,8 +155,9 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
+  caption?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -163,10 +172,440 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-pages".
+ */
+export interface LandingPage {
+  id: number;
+  title: string;
+  /**
+   * Use "home" for the current one-page homepage.
+   */
+  slug: string;
+  status?: ('draft' | 'published') | null;
+  seo: {
+    title: string;
+    description: string;
+    ogImage?: (number | null) | Media;
+  };
+  pageTheme?: ('dark-editorial' | 'light-editorial') | null;
+  sections: (
+    | {
+        eyebrow?: string | null;
+        headline: string;
+        subheadline: string;
+        primaryCta: {
+          label: string;
+          target: string;
+        };
+        secondaryCta: {
+          label: string;
+          target: string;
+        };
+        trustItems?:
+          | {
+              label: string;
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'hero';
+      }
+    | {
+        kicker?: string | null;
+        headline: string;
+        body: string;
+        layout?: ('narrow' | 'wide' | 'two-column') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'text';
+      }
+    | {
+        headline: string;
+        intro?: string | null;
+        problemItems?:
+          | {
+              title: string;
+              description: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'problem';
+      }
+    | {
+        headline: string;
+        intro?: string | null;
+        pillars?:
+          | {
+              title: string;
+              description: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'pillars';
+      }
+    | {
+        headline: string;
+        intro?: string | null;
+        steps?:
+          | {
+              title: string;
+              description: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'process';
+      }
+    | {
+        headline: string;
+        suitableFor?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        notSuitableFor?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'audience';
+      }
+    | {
+        kicker?: string | null;
+        headline: string;
+        text?: string | null;
+        /**
+         * Public image path, e.g. /images/private-executive-ai-session.png
+         */
+        imageSrc: string;
+        imageAlt: string;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'experienceImage';
+      }
+    | {
+        kicker?: string | null;
+        headline: string;
+        intro?: string | null;
+        testimonials?:
+          | {
+              quote: string;
+              person: string;
+              context?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'testimonials';
+      }
+    | {
+        kicker?: string | null;
+        headline: string;
+        intro?: string | null;
+        articles?:
+          | {
+              category?: string | null;
+              title: string;
+              excerpt: string;
+              readingTime?: string | null;
+              target?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'articleTeasers';
+      }
+    | {
+        headline: string;
+        faqs?:
+          | {
+              question: string;
+              answer: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'faq';
+      }
+    | {
+        headline: string;
+        text?: string | null;
+        cta: {
+          label: string;
+          target: string;
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'cta';
+      }
+    | {
+        kicker?: string | null;
+        headline?: string | null;
+        items?:
+          | {
+              label?: string | null;
+              headline: string;
+              text?: string | null;
+              cta: {
+                label: string;
+                target: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'ctaAccents';
+      }
+    | {
+        headline: string;
+        intro?: string | null;
+        submitLabel?: string | null;
+        successMessage?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'contactForm';
+      }
+  )[];
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  title: string;
+  slug: string;
+  status?: ('draft' | 'published') | null;
+  excerpt: string;
+  category?: string | null;
+  authorName?: string | null;
+  authorRole?: string | null;
+  /**
+   * Public image path for the small author portrait and author box.
+   */
+  authorImageSrc?: string | null;
+  authorBio?: string | null;
+  publishedAt?: string | null;
+  readingTime?: string | null;
+  heroImage?: (number | null) | Media;
+  /**
+   * Optional public image path fallback for POC articles.
+   */
+  heroImageSrc?: string | null;
+  heroImageCaption?: string | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    ogImage?: (number | null) | Media;
+  };
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Optional editorial modules for richer essays: image, quote, note, index, table, callout, CTA.
+   */
+  contentModules?:
+    | (
+        | {
+            kicker?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleText';
+          }
+        | {
+            kicker?: string | null;
+            headline?: string | null;
+            text?: string | null;
+            /**
+             * Public image path, e.g. /images/private-executive-ai-session.png
+             */
+            imageSrc: string;
+            imageAlt: string;
+            caption?: string | null;
+            layout?: ('wide' | 'inline') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleImage';
+          }
+        | {
+            quote: string;
+            attribution?: string | null;
+            variant?: ('pull' | 'compact') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleQuote';
+          }
+        | {
+            label?: string | null;
+            text: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleHandNote';
+          }
+        | {
+            kicker?: string | null;
+            headline?: string | null;
+            items?:
+              | {
+                  label: string;
+                  text?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleInsightIndex';
+          }
+        | {
+            kicker?: string | null;
+            headline: string;
+            leftHeader?: string | null;
+            rightHeader?: string | null;
+            rows?:
+              | {
+                  label: string;
+                  left: string;
+                  right: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleComparisonTable';
+          }
+        | {
+            kicker?: string | null;
+            headline: string;
+            text?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleCallout';
+          }
+        | {
+            headline: string;
+            text?: string | null;
+            label: string;
+            target: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'articleInlineCta';
+          }
+      )[]
+    | null;
+  articleCta?: {
+    headline?: string | null;
+    text?: string | null;
+    label?: string | null;
+    target?: string | null;
+  };
+  relatedArticles?: (number | Article)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages".
+ */
+export interface LegalPage {
+  id: number;
+  title: string;
+  slug: string;
+  legalType: 'impressum' | 'datenschutz';
+  status?: ('draft' | 'published') | null;
+  kicker?: string | null;
+  intro?: string | null;
+  /**
+   * HTML aus der Quellseite. Wichtige Anbieter-/Generator-Links in der Datenschutzerklaerung exakt beibehalten.
+   */
+  contentHtml: string;
+  /**
+   * Originalquelle fuer spaetere Kontrolle.
+   */
+  sourceUrl?: string | null;
+  /**
+   * WordPress page id auf kms-projects.com.
+   */
+  sourcePageId?: number | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads".
+ */
+export interface Lead {
+  id: number;
+  name: string;
+  email: string;
+  company?: string | null;
+  role?: string | null;
+  website?: string | null;
+  currentSituation: string;
+  aiExperience?: ('none' | 'first-tests' | 'regular-use' | 'company-use') | null;
+  preferredContact?: ('email' | 'phone' | 'linkedin') | null;
+  sourcePage?: string | null;
+  status?: ('new' | 'contacted' | 'qualified' | 'archived') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +622,36 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'landing-pages';
+        value: number | LandingPage;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
+        relationTo: 'legal-pages';
+        value: number | LegalPage;
+      } | null)
+    | ({
+        relationTo: 'leads';
+        value: number | Lead;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +661,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +684,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -263,6 +718,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -274,6 +730,416 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-pages_select".
+ */
+export interface LandingPagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ogImage?: T;
+      };
+  pageTheme?: T;
+  sections?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              eyebrow?: T;
+              headline?: T;
+              subheadline?: T;
+              primaryCta?:
+                | T
+                | {
+                    label?: T;
+                    target?: T;
+                  };
+              secondaryCta?:
+                | T
+                | {
+                    label?: T;
+                    target?: T;
+                  };
+              trustItems?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              body?: T;
+              layout?: T;
+              id?: T;
+              blockName?: T;
+            };
+        problem?:
+          | T
+          | {
+              headline?: T;
+              intro?: T;
+              problemItems?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pillars?:
+          | T
+          | {
+              headline?: T;
+              intro?: T;
+              pillars?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        process?:
+          | T
+          | {
+              headline?: T;
+              intro?: T;
+              steps?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        audience?:
+          | T
+          | {
+              headline?: T;
+              suitableFor?:
+                | T
+                | {
+                    item?: T;
+                    id?: T;
+                  };
+              notSuitableFor?:
+                | T
+                | {
+                    item?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        experienceImage?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              text?: T;
+              imageSrc?: T;
+              imageAlt?: T;
+              id?: T;
+              blockName?: T;
+            };
+        testimonials?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              intro?: T;
+              testimonials?:
+                | T
+                | {
+                    quote?: T;
+                    person?: T;
+                    context?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        articleTeasers?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              intro?: T;
+              articles?:
+                | T
+                | {
+                    category?: T;
+                    title?: T;
+                    excerpt?: T;
+                    readingTime?: T;
+                    target?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        faq?:
+          | T
+          | {
+              headline?: T;
+              faqs?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        cta?:
+          | T
+          | {
+              headline?: T;
+              text?: T;
+              cta?:
+                | T
+                | {
+                    label?: T;
+                    target?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ctaAccents?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    headline?: T;
+                    text?: T;
+                    cta?:
+                      | T
+                      | {
+                          label?: T;
+                          target?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        contactForm?:
+          | T
+          | {
+              headline?: T;
+              intro?: T;
+              submitLabel?: T;
+              successMessage?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  excerpt?: T;
+  category?: T;
+  authorName?: T;
+  authorRole?: T;
+  authorImageSrc?: T;
+  authorBio?: T;
+  publishedAt?: T;
+  readingTime?: T;
+  heroImage?: T;
+  heroImageSrc?: T;
+  heroImageCaption?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ogImage?: T;
+      };
+  content?: T;
+  contentModules?:
+    | T
+    | {
+        articleText?:
+          | T
+          | {
+              kicker?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        articleImage?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              text?: T;
+              imageSrc?: T;
+              imageAlt?: T;
+              caption?: T;
+              layout?: T;
+              id?: T;
+              blockName?: T;
+            };
+        articleQuote?:
+          | T
+          | {
+              quote?: T;
+              attribution?: T;
+              variant?: T;
+              id?: T;
+              blockName?: T;
+            };
+        articleHandNote?:
+          | T
+          | {
+              label?: T;
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        articleInsightIndex?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        articleComparisonTable?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              leftHeader?: T;
+              rightHeader?: T;
+              rows?:
+                | T
+                | {
+                    label?: T;
+                    left?: T;
+                    right?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        articleCallout?:
+          | T
+          | {
+              kicker?: T;
+              headline?: T;
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        articleInlineCta?:
+          | T
+          | {
+              headline?: T;
+              text?: T;
+              label?: T;
+              target?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  articleCta?:
+    | T
+    | {
+        headline?: T;
+        text?: T;
+        label?: T;
+        target?: T;
+      };
+  relatedArticles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages_select".
+ */
+export interface LegalPagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  legalType?: T;
+  status?: T;
+  kicker?: T;
+  intro?: T;
+  contentHtml?: T;
+  sourceUrl?: T;
+  sourcePageId?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads_select".
+ */
+export interface LeadsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  company?: T;
+  role?: T;
+  website?: T;
+  currentSituation?: T;
+  aiExperience?: T;
+  preferredContact?: T;
+  sourcePage?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

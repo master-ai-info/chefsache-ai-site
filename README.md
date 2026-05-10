@@ -1,67 +1,61 @@
-# Payload Blank Template
+# Chefsache AI POC Site
 
-This template comes configured with the bare minimum to get started on anything you need.
+Next.js + Payload CMS Proof of Concept fuer `chefsache-ai.com`.
 
-## Quick start
+## Lokal starten
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+```bash
+npm run dev
+```
 
-## Quick Start - local setup
+Danach:
 
-To spin up this template locally, follow these steps:
+- Frontend: `http://localhost:3000`
+- Payload Admin: `http://localhost:3000/admin`
 
-### Clone
+Beim ersten Oeffnen des Admins wird der erste Admin-User angelegt.
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+## Seed-Content
 
-### Development
+Die erste Chefsache-AI-Landingpage wird mit diesem Befehl im lokalen SQLite-CMS angelegt oder aktualisiert:
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+```bash
+npm run seed
+```
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+Der Seed legt eine Landing Page mit dem Slug `home` an.
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+## Wichtige Befehle
 
-#### Docker (Optional)
+```bash
+npm run generate:types
+npm run lint
+npx tsc --noEmit
+npm run build -- --webpack
+```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+Hinweis: Der normale `npm run build` nutzt in dieser Next-Version Turbopack und hing in der lokalen Codex-Umgebung. Der Webpack-Build wurde erfolgreich geprueft.
 
-To do so, follow these steps:
+## CMS-Struktur
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+Collections:
 
-## How it works
+- `Landing Pages`
+- `Articles`
+- `Leads`
+- `Media`
+- `Users`
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+Die Landingpage wird ueber sortierbare Payload-Blocks gepflegt. Inhalte aus dem Claude-Design-Export sind nicht uebernommen; der Export dient nur als visuelle Referenz.
 
-### Collections
+## Kontaktformular
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+Das Formular speichert Leads lokal in der `Leads` Collection.
 
-- #### Users (Authentication)
+Noch nicht Teil des POC:
 
-  Users are auth-enabled collections that have access to the admin panel.
+- E-Mail-Benachrichtigung
+- Spam-Schutz
+- Calendly/Buchungstool
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+Diese Punkte werden erst vor Produktivnahme umgesetzt.
