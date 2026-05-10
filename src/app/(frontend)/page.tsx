@@ -8,6 +8,8 @@ import { ContactForm } from './components/ContactForm'
 import { SiteFooter, SiteHeader } from './components/SiteChrome'
 import './styles.css'
 
+export const dynamic = 'force-dynamic'
+
 type CmsBlock = {
   blockType: string
   [key: string]: unknown
@@ -132,19 +134,24 @@ const fallbackPage: CmsLandingPage = {
 }
 
 async function getLandingPage(): Promise<CmsLandingPage> {
-  const payload = await getPayload({ config })
-  const result = await payload.find({
-    collection: 'landing-pages',
-    depth: 1,
-    limit: 1,
-    where: {
-      slug: {
-        equals: 'home',
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'landing-pages',
+      depth: 1,
+      limit: 1,
+      where: {
+        slug: {
+          equals: 'home',
+        },
       },
-    },
-  })
+    })
 
-  return (result.docs[0] as CmsLandingPage | undefined) || fallbackPage
+    return (result.docs[0] as CmsLandingPage | undefined) || fallbackPage
+  } catch (error) {
+    console.warn('Falling back to static homepage content.', error)
+    return fallbackPage
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {
