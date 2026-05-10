@@ -1,5 +1,7 @@
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -14,6 +16,21 @@ import { Leads } from './collections/Leads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const databaseUrl = process.env.DATABASE_URL || 'file:./site.db'
+const isPostgres = databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://')
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN
+
+const db = isPostgres
+  ? postgresAdapter({
+      pool: {
+        connectionString: databaseUrl,
+      },
+    })
+  : sqliteAdapter({
+      client: {
+        url: databaseUrl,
+      },
+    })
 
 export default buildConfig({
   admin: {
@@ -28,11 +45,16 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || '',
-    },
-  }),
+  db,
   sharp,
-  plugins: [],
+  plugins: [
+    vercelBlobStorage({
+      clientUploads: true,
+      collections: {
+        media: true,
+      },
+      enabled: Boolean(blobToken),
+      token: blobToken,
+    }),
+  ],
 })

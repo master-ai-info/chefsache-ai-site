@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import config from '@/payload.config'
+import { absoluteUrl } from '@/lib/site'
 import { ContactForm } from './components/ContactForm'
 import { SiteFooter, SiteHeader } from './components/SiteChrome'
 import './styles.css'
@@ -17,6 +18,9 @@ type CmsLandingPage = {
   seo?: {
     title?: string
     description?: string
+    ogImage?: {
+      url?: string
+    }
   }
   sections?: CmsBlock[]
 }
@@ -145,10 +149,25 @@ async function getLandingPage(): Promise<CmsLandingPage> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getLandingPage()
+  const title = page.seo?.title || fallbackPage.seo?.title
+  const description = page.seo?.description || fallbackPage.seo?.description
+  const ogImage = page.seo?.ogImage?.url
 
   return {
-    description: page.seo?.description || fallbackPage.seo?.description,
-    title: page.seo?.title || fallbackPage.seo?.title,
+    alternates: {
+      canonical: absoluteUrl('/'),
+    },
+    description,
+    openGraph: {
+      description,
+      images: ogImage ? [{ url: ogImage }] : undefined,
+      locale: 'de_DE',
+      siteName: 'Chefsache AI',
+      title,
+      type: 'website',
+      url: absoluteUrl('/'),
+    },
+    title,
   }
 }
 

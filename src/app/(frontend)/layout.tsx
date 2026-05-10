@@ -1,7 +1,9 @@
 import React from 'react'
+import { siteUrl } from '@/lib/site'
 import './styles.css'
 
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   description: 'Executive AI Coaching fuer Entscheider.',
   title: 'Chefsache AI',
 }

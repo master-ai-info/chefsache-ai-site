@@ -5,6 +5,7 @@ import React from 'react'
 
 import type { Article, Media } from '@/payload-types'
 import config from '@/payload.config'
+import { absoluteUrl } from '@/lib/site'
 import { getArticleSections, RichText } from '../../components/RichText'
 import { SiteFooter, SiteHeader } from '../../components/SiteChrome'
 
@@ -82,9 +83,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
+  const pathname = `/essays/${article.slug}`
+  const title = article.seo?.title || `${article.title} - Chefsache AI`
+  const description = article.seo?.description || article.excerpt
+  const heroImage = getArticleHeroMedia(article.heroImage)
+
   return {
-    description: article.seo?.description || article.excerpt,
-    title: article.seo?.title || `${article.title} - Chefsache AI`,
+    alternates: {
+      canonical: absoluteUrl(pathname),
+    },
+    description,
+    openGraph: {
+      description,
+      images: heroImage?.url ? [{ url: heroImage.url }] : undefined,
+      locale: 'de_DE',
+      siteName: 'Chefsache AI',
+      title,
+      type: 'article',
+      url: absoluteUrl(pathname),
+    },
+    title,
   }
 }
 
@@ -202,6 +220,10 @@ function ArticleImageModule({ module }: { module: ArticleModule }) {
       </figcaption>
     </figure>
   )
+}
+
+function getArticleHeroMedia(media?: number | Media | null) {
+  return typeof media === 'object' && media?.url ? media : null
 }
 
 function ArticleQuoteModule({ module }: { module: ArticleModule }) {
