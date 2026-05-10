@@ -2,6 +2,22 @@
 
 Next.js + Payload CMS Proof of Concept fuer `chefsache-ai.com`.
 
+## Erst lesen
+
+Vor Production-, Vercel-, Neon-, Blob-, Migration-, Seed- oder CMS-Strukturaenderungen zuerst lesen:
+
+```text
+../docs/technical-live-handoff.md
+```
+
+Dort steht der aktuelle Live-Stand mit Vercel-Projekt, GitHub-Repo, Build Command, Environment Variables, Neon-/Payload-Zugriff, sicheren Content-Update-Wegen und bekannten Stolperfallen.
+
+Fuer Copy-Arbeit mit Agenten:
+
+```text
+../docs/copy-agent-cms-format.md
+```
+
 ## Production-Ziel
 
 Der POC ist fuer Vercel vorbereitet:

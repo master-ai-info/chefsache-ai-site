@@ -53,6 +53,14 @@ export const LandingPages: CollectionConfig = {
           required: true,
         },
         {
+          name: 'ogTitle',
+          type: 'text',
+        },
+        {
+          name: 'ogDescription',
+          type: 'textarea',
+        },
+        {
           name: 'ogImage',
           type: 'upload',
           relationTo: 'media',

@@ -185,14 +185,20 @@ export interface LandingPage {
   seo: {
     title: string;
     description: string;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
     ogImage?: (number | null) | Media;
   };
   pageTheme?: ('dark-editorial' | 'light-editorial') | null;
   sections: (
     | {
         eyebrow?: string | null;
+        cornerStampLabel?: string | null;
+        cornerStampText?: string | null;
         headline: string;
         subheadline: string;
+        heroImageCaption?: string | null;
+        handwrittenNote?: string | null;
         primaryCta: {
           label: string;
           target: string;
@@ -216,12 +222,14 @@ export interface LandingPage {
         kicker?: string | null;
         headline: string;
         body: string;
+        attribution?: string | null;
         layout?: ('narrow' | 'wide' | 'two-column') | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'text';
       }
     | {
+        kicker?: string | null;
         headline: string;
         intro?: string | null;
         problemItems?:
@@ -744,6 +752,8 @@ export interface LandingPagesSelect<T extends boolean = true> {
     | {
         title?: T;
         description?: T;
+        ogTitle?: T;
+        ogDescription?: T;
         ogImage?: T;
       };
   pageTheme?: T;
@@ -754,8 +764,12 @@ export interface LandingPagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
+              cornerStampLabel?: T;
+              cornerStampText?: T;
               headline?: T;
               subheadline?: T;
+              heroImageCaption?: T;
+              handwrittenNote?: T;
               primaryCta?:
                 | T
                 | {
@@ -784,6 +798,7 @@ export interface LandingPagesSelect<T extends boolean = true> {
               kicker?: T;
               headline?: T;
               body?: T;
+              attribution?: T;
               layout?: T;
               id?: T;
               blockName?: T;
@@ -791,6 +806,7 @@ export interface LandingPagesSelect<T extends boolean = true> {
         problem?:
           | T
           | {
+              kicker?: T;
               headline?: T;
               intro?: T;
               problemItems?:

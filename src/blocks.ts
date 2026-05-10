@@ -25,6 +25,14 @@ export const HeroBlock: Block = {
       type: 'text',
     },
     {
+      name: 'cornerStampLabel',
+      type: 'text',
+    },
+    {
+      name: 'cornerStampText',
+      type: 'text',
+    },
+    {
       name: 'headline',
       type: 'text',
       required: true,
@@ -33,6 +41,14 @@ export const HeroBlock: Block = {
       name: 'subheadline',
       type: 'textarea',
       required: true,
+    },
+    {
+      name: 'heroImageCaption',
+      type: 'text',
+    },
+    {
+      name: 'handwrittenNote',
+      type: 'text',
     },
     {
       name: 'primaryCta',
@@ -81,6 +97,10 @@ export const TextBlock: Block = {
       required: true,
     },
     {
+      name: 'attribution',
+      type: 'text',
+    },
+    {
       name: 'layout',
       type: 'select',
       defaultValue: 'narrow',
@@ -96,6 +116,10 @@ export const TextBlock: Block = {
 export const ProblemBlock: Block = {
   slug: 'problem',
   fields: [
+    {
+      name: 'kicker',
+      type: 'text',
+    },
     {
       name: 'headline',
       type: 'text',

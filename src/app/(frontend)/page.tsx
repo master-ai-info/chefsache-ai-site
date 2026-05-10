@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import config from '@/payload.config'
+import { homePage } from '@/content/homePage'
 import { absoluteUrl } from '@/lib/site'
 import { ContactForm } from './components/ContactForm'
 import { SiteFooter, SiteHeader } from './components/SiteChrome'
@@ -20,6 +21,8 @@ type CmsLandingPage = {
   seo?: {
     title?: string
     description?: string
+    ogTitle?: string
+    ogDescription?: string
     ogImage?: {
       url?: string
     }
@@ -27,111 +30,7 @@ type CmsLandingPage = {
   sections?: CmsBlock[]
 }
 
-const fallbackPage: CmsLandingPage = {
-  seo: {
-    title: 'Chefsache AI - Executive AI Coaching',
-    description:
-      'Executive AI Coaching von Kai Michael Schaefer fuer Entscheider, die kuenstliche Intelligenz zuerst selbst verstehen und nutzen wollen.',
-  },
-  title: 'Chefsache AI',
-  sections: [
-    {
-      blockType: 'hero',
-      eyebrow: 'Ein persoenliches Programm von Kai Michael Schaefer',
-      headline: 'AI ist Chefsache. Aber zuerst persoenlich.',
-      primaryCta: { label: 'Erstgespraech anfragen', target: '#kontakt' },
-      secondaryCta: { label: 'Ablauf ansehen', target: '#ablauf' },
-      subheadline:
-        'Executive AI Coaching fuer Entscheider, die AI einordnen, im eigenen Arbeitsalltag produktiv nutzen und die naechsten Schritte fuer ihr Unternehmen fundiert vorbereiten wollen.',
-      trustItems: [
-        { label: 'Fokus', value: 'Strategie' },
-        { label: 'Praxis', value: 'Eigene Workflows' },
-        { label: 'Transfer', value: 'Unternehmen' },
-      ],
-    },
-    {
-      blockType: 'text',
-      body:
-        'Viele Unternehmen diskutieren KI strategisch, obwohl die Entscheider selbst noch kaum produktiv damit arbeiten. Genau dort setzt Chefsache AI an.',
-      headline: 'Wer AI entscheiden will, muss AI zuerst selbst erfahren.',
-      kicker: 'Ausgangslage',
-      layout: 'two-column',
-    },
-    {
-      blockType: 'pillars',
-      headline: 'Drei Saeulen fuer persoenlichen AI-Vorsprung',
-      intro: 'Das Coaching verbindet Einordnung, Anwendung und den Transfer auf Ihre Organisation.',
-      pillars: [
-        {
-          title: 'Mindset und Einordnung',
-          description: 'Sie verstehen, was AI technologisch und wirtschaftlich wirklich veraendert.',
-        },
-        {
-          title: 'Persoenliche AI-Skills',
-          description: 'Sie arbeiten an eigenen Aufgaben, Dokumenten, Entscheidungen und Workflows.',
-        },
-        {
-          title: 'Transfer ins Unternehmen',
-          description: 'Sie erkennen, welche naechsten Schritte fuer Adoption und Enablement sinnvoll sind.',
-        },
-      ],
-    },
-    {
-      blockType: 'process',
-      headline: 'Ein kompaktes Format fuer Entscheider mit wenig Zeit',
-      intro: 'Der konkrete Ablauf bleibt flexibel und wird vor dem Start final festgelegt.',
-      steps: [
-        {
-          title: 'Vorbereitung',
-          description: 'Kurze Standortbestimmung zu Rolle, Zielen, Arbeitsablaeufen und AI-Erfahrung.',
-        },
-        {
-          title: 'Private Sessions',
-          description: 'Arbeit an realen Aufgaben statt generischer Tool-Demos oder Kurslogik.',
-        },
-        {
-          title: 'Roadmap',
-          description: 'Persoenliche AI-Praxis und erste naechste Schritte fuer Ihr Unternehmen.',
-        },
-      ],
-    },
-    {
-      blockType: 'cta',
-      headline: 'Wenn aus persoenlichem Vorsprung Unternehmensfaehigkeit werden soll.',
-      text:
-        'Aus dem Coaching kann ein AI Audit, eine Enablement-Roadmap oder ein Programm mit AI Transformation Partners entstehen.',
-      cta: { label: 'Erstgespraech anfragen', target: '#kontakt' },
-    },
-    {
-      blockType: 'faq',
-      headline: 'Fragen, die vor dem Start typischerweise auftauchen',
-      faqs: [
-        {
-          question: 'Brauche ich technisches Vorwissen?',
-          answer: 'Nein. Entscheidend ist die Bereitschaft, AI praktisch im eigenen Arbeitsalltag zu erproben.',
-        },
-        {
-          question: 'Ist das ein Kurs?',
-          answer:
-            'Nein. Chefsache AI ist persoenliches Executive Coaching, kann aber Basisinhalte als Vorbereitung nutzen.',
-        },
-        {
-          question: 'Kann daraus ein Unternehmensprogramm entstehen?',
-          answer:
-            'Ja. Wenn der naechste Schritt groesser wird, kann AI Transformation Partners sinnvoll anschliessen.',
-        },
-      ],
-    },
-    {
-      blockType: 'contactForm',
-      headline: 'Privates Erstgespraech anfragen',
-      intro:
-        'Beschreiben Sie kurz Ihre Situation. Die Anfrage wird im POC im CMS gespeichert; E-Mail-Benachrichtigungen folgen erst vor Produktivnahme.',
-      submitLabel: 'Anfrage speichern',
-      successMessage: 'Danke. Ihre Anfrage wurde gespeichert.',
-    },
-  ],
-}
+const fallbackPage: CmsLandingPage = homePage
 
 async function getLandingPage(): Promise<CmsLandingPage> {
   try {
@@ -158,6 +57,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getLandingPage()
   const title = page.seo?.title || fallbackPage.seo?.title
   const description = page.seo?.description || fallbackPage.seo?.description
+  const ogTitle = page.seo?.ogTitle || title
+  const ogDescription = page.seo?.ogDescription || description
   const ogImage = page.seo?.ogImage?.url
 
   return {
@@ -166,11 +67,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     openGraph: {
-      description,
+      description: ogDescription,
       images: ogImage ? [{ url: ogImage }] : undefined,
       locale: 'de_DE',
       siteName: 'Chefsache AI',
-      title,
+      title: ogTitle,
       type: 'website',
       url: absoluteUrl('/'),
     },
@@ -232,12 +133,18 @@ function HeroBlock({ block }: { block: CmsBlock }) {
   const primary = block.primaryCta as { label?: string; target?: string } | undefined
   const secondary = block.secondaryCta as { label?: string; target?: string } | undefined
   const trustItems = (block.trustItems as { label?: string; value?: string }[] | undefined) || []
+  const handwrittenNote = String(
+    block.handwrittenNote || 'Auch für kleine Geschäftsführungsteams.',
+  )
+  const heroImageCaption = String(
+    block.heroImageCaption || 'Über etwas entscheiden, das man nicht selbst beherrscht.',
+  )
 
   return (
     <section className="hero shell" id="top">
       <div className="hero-corner-stamp">
-        <strong>Nr. 01 · POC</strong>
-        <span>Executive AI Coaching</span>
+        <strong>{String(block.cornerStampLabel || 'Chefsache AI')}</strong>
+        <span>{String(block.cornerStampText || 'Executive AI Coaching')}</span>
       </div>
       <div className="eyebrow">{String(block.eyebrow || 'Chefsache AI')}</div>
       <div className="hero-grid">
@@ -257,8 +164,7 @@ function HeroBlock({ block }: { block: CmsBlock }) {
             )}
           </div>
           <div className="margin-note hero-note">
-            <span className="note-line">Auch fuer kleine</span>
-            <span className="note-line">Geschaeftsfuehrungsteams.</span>
+            <span className="note-line">{handwrittenNote}</span>
             <span />
           </div>
         </div>
@@ -271,8 +177,7 @@ function HeroBlock({ block }: { block: CmsBlock }) {
             />
             <div className="portrait-surface" />
             <div className="portrait-caption portrait-quote">
-              <strong>Erkennen Sie sich wieder?</strong>
-              <span>AI entscheiden, bevor sie wirklich greifbar wird.</span>
+              <strong>{heroImageCaption}</strong>
             </div>
           </aside>
         </div>
@@ -311,14 +216,14 @@ function TextBlock({ block, index }: { block: CmsBlock; index: number }) {
           <p>{String(block.body || block.headline || '')}</p>
           <footer>
             <span />
-            <strong>Kai Michael Schaefer</strong>
+            <strong>{String(block.attribution || 'Kai Michael Schäfer')}</strong>
           </footer>
         </blockquote>
       </section>
     )
   }
 
-  if (kicker.toLowerCase() === 'ihr sparringspartner') {
+  if (kicker.toLowerCase().includes('sparringspartner')) {
     return (
       <section className="section section-statement section-sparring shell">
         <span className="giant-numeral">{String(index).padStart(2, '0')}</span>
@@ -341,7 +246,10 @@ function TextBlock({ block, index }: { block: CmsBlock; index: number }) {
   }
 
   return (
-    <section className="section section-statement shell" id={index === 1 ? 'ausgangslage' : undefined}>
+    <section
+      className="section section-statement shell"
+      id={kicker.toLowerCase().includes('befund') ? 'ausgangslage' : undefined}
+    >
       <span className="giant-numeral">{String(index).padStart(2, '0')}</span>
       <SectionTag index={index} label={block.kicker} />
       <div className={`text-block layout-${String(block.layout || 'narrow')}`}>
@@ -358,7 +266,7 @@ function ProblemBlock({ block, index }: { block: CmsBlock; index: number }) {
   return (
     <section className="section section-problem shell">
       <span className="giant-numeral">{String(index).padStart(2, '0')}</span>
-      <SectionTag index={index} label="Status quo" />
+      <SectionTag index={index} label={block.kicker || 'Status quo'} />
       <SectionIntro block={block} />
       <div className="card-grid problem-grid">
         {items.map((item, itemIndex) => (
