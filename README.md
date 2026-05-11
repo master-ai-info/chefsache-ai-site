@@ -106,9 +106,54 @@ PAYLOAD_SECRET=replace-with-a-long-random-secret
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
+## Production-Credentials lokal
+
+Fuer Production-Migrationen gegen Neon braucht Codex lokal echte Production-Env-Werte. Vercel hat diese Werte fuer Deployments, stellt sie lokalen Shell-Prozessen aber nicht automatisch bereit.
+
+Lokaler Standardort:
+
+```text
+.env.production.local
+```
+
+Diese Datei ist durch `.gitignore` abgedeckt und darf nicht committed werden. Sie muss fuer Production-Arbeit echte Werte enthalten:
+
+```env
+DATABASE_URL=postgresql://...
+PAYLOAD_SECRET=...
+NEXT_PUBLIC_SITE_URL=https://chefsache-ai-site.vercel.app
+BLOB_READ_WRITE_TOKEN=...
+```
+
+Presence-Check ohne Secret-Ausgabe:
+
+```bash
+node --input-type=module -e "import { config } from 'dotenv'; config({ path: '.env.production.local', override: true }); console.log({ hasDatabase: Boolean(process.env.DATABASE_URL), hasSecret: Boolean(process.env.PAYLOAD_SECRET), hasBlob: Boolean(process.env.BLOB_READ_WRITE_TOKEN) })"
+```
+
+Production-Migration ohne Secret-Ausgabe:
+
+```bash
+node --input-type=module -e "import { config } from 'dotenv'; import { spawnSync } from 'node:child_process'; config({ path: '.env.production.local', override: true }); const result = spawnSync('npm', ['run', 'payload', '--', 'migrate'], { stdio: 'inherit', env: process.env }); process.exit(result.status ?? 1)"
+```
+
+Wichtig: Vercel deployt Code, fuehrt aber keine Payload-Migration gegen Neon aus. Wenn Blocks, Collections, Migrations oder Payload-Typen geaendert wurden, muss Neon aktiv migriert werden.
+
 ## Vercel-Konfiguration
 
 - Root Directory: dieses Verzeichnis
 - Build Command: `npm run build -- --webpack`
 - Production Env Vars: `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SITE_URL`, `BLOB_READ_WRITE_TOKEN`
 - Domain erst verbinden, wenn die Production-URL, Admin, Lead-Speicherung, Media Upload, `/sitemap.xml` und `/robots.txt` sauber getestet sind.
+
+## Production-CMS-Health-Check
+
+Nach jedem Live-Deploy mit CMS-Bezug pruefen:
+
+```bash
+curl -s 'https://chefsache-ai-site.vercel.app/api/articles?limit=1'
+curl -s 'https://chefsache-ai-site.vercel.app/api/landing-pages?select%5Btitle%5D=true&select%5Bslug%5D=true&limit=1'
+curl -s 'https://chefsache-ai-site.vercel.app/api/landing-pages?limit=1'
+```
+
+Wenn der selektive Landingpage-Check funktioniert, aber der vollstaendige Check `Something went wrong` liefert, ist die Landingpage wahrscheinlich nicht geloescht. Dann crasht meist das `sections`-Blockfeld wegen Code/Neon-Schema-Drift. In diesem Fall zuerst Production-Migrationen gegen Neon pruefen und ausfuehren, nicht sofort seeden.
