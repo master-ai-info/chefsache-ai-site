@@ -82,16 +82,16 @@ Naechster Schritt: Nutzer Live-Artikel pruefen lassen; bei Freigabe lokale Code-
 ```
 
 ```text
-Status: Landingpage-Artikelteaser lokal repariert.
+Status: Landingpage-Artikelteaser veroeffentlicht.
 Arbeitsfokus: Neueste Artikel automatisch auf der Landingpage anzeigen.
 Geaendert: Homepage laedt serverseitig bis zu vier neueste published Articles aus Payload und rendert sie im ArticleTeasers-Abschnitt; falls der CMS-Block fehlt, wird ein virtueller Abschnitt vor dem FAQ eingefuegt. Lokaler Seed des Leitartikels auf published nachgezogen.
 Geaendert in: src/app/(frontend)/page.tsx, src/content/homePage.ts, src/seed.ts.
 Quelle der Wahrheit: Git fuer Homepage-Rendering; Production Payload CMS fuer Artikelinhalte.
-Live gestellt: Nein. Codefix ist lokal geprueft, aber noch nicht committed/gepusht/deployed.
-Geprueft: npm run seed; npm run lint (nur bestehende Migrations-Warnungen); npx tsc --noEmit; npm run build -- --webpack; lokale Chrome/Playwright-Pruefung der Homepage mit Artikelkarten und Links.
-Offen: Nach Nutzerfreigabe committen/pushen/deployen, damit die Landingpage live die neuesten Artikel zeigt.
-Risiken: Solange der Codefix nicht deployed ist, bleibt die Production-Landingpage ohne dynamische neueste Artikel.
-Naechster Schritt: Nutzerfreigabe fuer Commit/Push/Deploy einholen.
+Live gestellt: Ja. Commit 73ebc2c wurde auf main gepusht und per Vercel Auto-Deploy auf Production veroeffentlicht.
+Geprueft: npm run seed; npm run lint (nur bestehende Migrations-Warnungen); npx tsc --noEmit; npm run build -- --webpack; lokale Chrome/Playwright-Pruefung der Homepage mit Artikelkarten und Links; Production-HTML enthaelt Neueste Artikel und den Leitartikel-Link; Browserklick von der Live-Landingpage auf den Artikel; Production Articles-API und Landingpages-API liefern HTTP 200.
+Offen: Keine akute Aufgabe fuer diese Aenderung.
+Risiken: Der Artikelinhalt kommt aus dem Production-CMS; die Landingpage-Teaser reagieren deshalb auf kuenftige published Articles im CMS.
+Naechster Schritt: Optional spaeter echte geschuetzte Production-Draft-Preview und Media-Route /api/media/file/... klaeren.
 ```
 
 ## Vorlage fuer neue Eintraege
