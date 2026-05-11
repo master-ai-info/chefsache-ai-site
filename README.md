@@ -7,6 +7,7 @@ Next.js + Payload CMS Proof of Concept fuer `chefsache-ai.com`.
 Vor Production-, Vercel-, Neon-, Blob-, Migration-, Seed- oder CMS-Strukturaenderungen zuerst lesen:
 
 ```text
+docs/agentic-website-workflow-sop.md
 ../docs/technical-live-handoff.md
 ```
 

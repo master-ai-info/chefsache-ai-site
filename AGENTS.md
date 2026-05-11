@@ -2,6 +2,8 @@
 
 Before making changes in this repo, read:
 
+- `docs/agentic-website-workflow-sop.md`
+- `../docs/agentic-website-workflow-sop.md`
 - `../docs/technical-live-handoff.md`
 - `../docs/handoff-next-chat.md`
 - `README.md`
@@ -30,6 +32,7 @@ Production facts:
 
 Important workflow notes:
 
+- Default workflow is local first, then user approval, then commit/push/deploy. Do not deploy experiments without explicit approval.
 - Local `npm run seed` updates local SQLite unless `DATABASE_URL` explicitly points to Neon.
 - Seeds do not run automatically on Vercel.
 - For schema/field changes, generate/update types and add a migration before deploying.
