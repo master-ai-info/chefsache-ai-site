@@ -14,39 +14,20 @@ type ArticleModule = {
   [key: string]: unknown
 }
 
+type RelatedArticle = {
+  category?: string | null
+  excerpt?: string
+  publishedAt?: string | null
+  readingTime?: string | null
+  slug: string
+  title: string
+}
+
 type PageProps = {
   params: Promise<{
     slug: string
   }>
 }
-
-const fallbackRelated = [
-  {
-    category: 'Essay · Praxis',
-    excerpt:
-      'Was Vorstaende in den ersten Sitzungen lernen und woran erfahrene Berater scheitern.',
-    publishedAt: '2026-02-28T00:00:00.000Z',
-    readingTime: '7 Minuten',
-    slug: '#',
-    title: 'Die ersten zehn Stunden mit einem Modell.',
-  },
-  {
-    category: 'Notiz · Methodik',
-    excerpt: 'Eine kurze Heuristik aus Coaching-Mandaten, anwendbar in der naechsten Sitzung.',
-    publishedAt: '2026-02-12T00:00:00.000Z',
-    readingTime: '4 Minuten',
-    slug: '#',
-    title: 'Drei Fragen, die jede AI-Roadmap ueberleben muss.',
-  },
-  {
-    category: 'Manifest · Position',
-    excerpt: 'Schulungen vermitteln Wissen. Coaching veraendert Praxis. Eine Abgrenzung.',
-    publishedAt: '2026-01-30T00:00:00.000Z',
-    readingTime: '5 Minuten',
-    slug: '#',
-    title: 'Warum ich keine Schulungen anbiete.',
-  },
-]
 
 async function getArticle(slug: string): Promise<Article | null> {
   const payload = await getPayload({ config })
@@ -77,6 +58,31 @@ async function getArticle(slug: string): Promise<Article | null> {
   })
 
   return (result.docs[0] as Article | undefined) || null
+}
+
+async function getLatestRelatedArticles(currentSlug: string): Promise<RelatedArticle[]> {
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'articles',
+      depth: 0,
+      limit: 4,
+      sort: '-publishedAt',
+      where: {
+        status: {
+          equals: 'published',
+        },
+      },
+    })
+
+    return result.docs
+      .filter((item) => item.slug !== currentSlug)
+      .slice(0, 3)
+      .map(toRelatedArticle)
+  } catch (error) {
+    console.warn('Could not load related articles.', error)
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -114,7 +120,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
-  const article = await getArticle(slug)
+  const [article, latestRelatedArticles] = await Promise.all([
+    getArticle(slug),
+    getLatestRelatedArticles(slug),
+  ])
 
   if (!article) {
     notFound()
@@ -130,7 +139,7 @@ export default async function ArticlePage({ params }: PageProps) {
     ),
   ]
   const relatedArticles = normalizeRelatedArticles(article.relatedArticles)
-  const related = relatedArticles.length ? relatedArticles : fallbackRelated
+  const related = relatedArticles.length ? relatedArticles : latestRelatedArticles
 
   return (
     <>
@@ -450,15 +459,12 @@ function ArticleCTA({ article }: { article: Article }) {
 function RelatedArticles({
   articles,
 }: {
-  articles: {
-    category?: string | null
-    excerpt?: string
-    publishedAt?: string | null
-    readingTime?: string | null
-    slug: string
-    title: string
-  }[]
+  articles: RelatedArticle[]
 }) {
+  if (articles.length === 0) {
+    return null
+  }
+
   return (
     <section className="shell related">
       <div className="section-tag">
@@ -467,11 +473,11 @@ function RelatedArticles({
       </div>
       <div className="related-intro">
         <div className="eyebrow">Aus derselben Linie</div>
-        <h2>Drei weitere Texte, die denselben Faden ziehen.</h2>
+        <h2>Weitere Essays, die denselben Faden ziehen.</h2>
       </div>
       <div className="related-grid">
         {articles.map((item, index) => (
-          <a className="rel-card" href={item.slug === '#' ? '#' : `/essays/${item.slug}`} key={`${item.slug}-${index}`}>
+          <a className="rel-card" href={`/essays/${item.slug}`} key={`${item.slug}-${index}`}>
             <span className="num">{String(index + 1).padStart(2, '0')}</span>
             <span className="cat">{item.category || 'Essay'}</span>
             <h3>{item.title}</h3>
@@ -490,20 +496,27 @@ function RelatedArticles({
 
 function normalizeRelatedArticles(related?: (number | Article)[] | null) {
   return (related || [])
-    .filter((item): item is Article => typeof item === 'object')
-    .map((item) => ({
-      category: item.category,
-      excerpt: item.excerpt,
-      publishedAt: item.publishedAt,
-      readingTime: item.readingTime,
-      slug: item.slug,
-      title: item.title,
-    }))
+    .filter(
+      (item): item is Article =>
+        typeof item === 'object' && (process.env.NODE_ENV !== 'production' || item.status === 'published'),
+    )
+    .map(toRelatedArticle)
+}
+
+function toRelatedArticle(article: Article): RelatedArticle {
+  return {
+    category: article.category,
+    excerpt: article.excerpt,
+    publishedAt: article.publishedAt,
+    readingTime: article.readingTime,
+    slug: article.slug,
+    title: article.title,
+  }
 }
 
 function formatDate(value?: string | null) {
   if (!value) {
-    return '14. Maerz 2026'
+    return 'Aktuell'
   }
 
   return new Intl.DateTimeFormat('de-DE', {

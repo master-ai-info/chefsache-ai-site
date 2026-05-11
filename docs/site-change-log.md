@@ -94,6 +94,19 @@ Risiken: Der Artikelinhalt kommt aus dem Production-CMS; die Landingpage-Teaser 
 Naechster Schritt: Optional spaeter echte geschuetzte Production-Draft-Preview und Media-Route /api/media/file/... klaeren.
 ```
 
+```text
+Status: Related Articles im Artikeltemplate lokal dynamisiert.
+Arbeitsfokus: Statische Platzhalter unter Essays entfernen.
+Geaendert: Der Related-Block unter Artikeln nutzt zuerst gepflegte relatedArticles und faellt sonst auf die neuesten published Articles aus Payload zurueck; der aktuelle Artikel wird ausgeschlossen; bei fehlenden echten Artikeln wird der Block ausgeblendet statt Platzhalter zu zeigen.
+Geaendert in: src/app/(frontend)/essays/[slug]/page.tsx.
+Quelle der Wahrheit: Git fuer Rendering-Logik; Production Payload CMS fuer Article-Daten.
+Live gestellt: Nein. Codefix ist lokal geprueft, aber noch nicht committed/gepusht/deployed.
+Geprueft: npm run lint (nur bestehende Migrations-Warnungen); npx tsc --noEmit; npm run build -- --webpack; lokale Browserpruefung unter /essays/ai-verstehen-bevor-man-entscheidet mit dynamischer Related-Headline, echtem Article-Link und ohne alte Platzhalter.
+Offen: Nutzerfreigabe fuer Commit/Push/Deploy.
+Risiken: Bis zum Deploy zeigt Production unter Artikeln weiter den statischen Platzhalterblock.
+Naechster Schritt: Nach Freigabe sauber veroeffentlichen.
+```
+
 ## Vorlage fuer neue Eintraege
 
 ```md
