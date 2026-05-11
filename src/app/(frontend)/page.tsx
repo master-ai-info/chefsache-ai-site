@@ -27,7 +27,7 @@ type CmsLandingPage = {
       url?: string
     }
   }
-  sections?: CmsBlock[]
+  sections?: readonly CmsBlock[]
 }
 
 const fallbackPage: CmsLandingPage = homePage

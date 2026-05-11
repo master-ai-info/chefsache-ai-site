@@ -53,6 +53,22 @@ npm run seed
 
 Der Seed legt eine Landing Page mit dem Slug `home` an.
 
+## CMS-Copy versionieren
+
+Wenn Landingpage-Texte im Production-CMS angepasst und veroeffentlicht wurden, den aktuellen CMS-Stand zurueck ins Repo synchronisieren:
+
+```bash
+npm run sync:homepage-from-cms
+```
+
+Der Befehl liest `landing-pages/home` von der Production-URL, entfernt technische Payload-Felder und schreibt die versionierte Baseline nach:
+
+```text
+src/content/homePage.ts
+```
+
+Danach Diff pruefen, committen und pushen. So bleibt Payload die schnelle Schreiboberflaeche, Git aber die belastbare Copy-Versionierung.
+
 ## Wichtige Befehle
 
 ```bash
