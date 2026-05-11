@@ -482,7 +482,7 @@ function CTABlock({ block, index }: { block: CmsBlock; index: number }) {
     <section className="section section-cta shell">
       <span className="giant-numeral">{String(index).padStart(2, '0')}</span>
       <SectionTag index={index} label="Naechster Schritt" />
-      <div className="cta-band">
+      <div className="cta-band" data-section-number={String(index).padStart(2, '0')}>
         <div>
           <h2>{String(block.headline || '')}</h2>
           {cta?.label ? (

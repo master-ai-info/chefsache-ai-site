@@ -1176,10 +1176,12 @@ p {
 }
 
 .experience-figure figcaption {
-  bottom: clamp(34px, 4vw, 62px);
+  bottom: auto;
   left: clamp(30px, 5vw, 82px);
   max-width: min(430px, 42vw);
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 3;
 }
 
@@ -1515,9 +1517,8 @@ details:not([open]) > p {
 
 .cta-band::after {
   color: var(--accent);
-  content: "AI";
   font-family: var(--display);
-  content: "07";
+  content: attr(data-section-number);
   font-size: clamp(180px, 24vw, 340px);
   font-style: italic;
   line-height: 0.8;
@@ -1704,10 +1705,6 @@ details:not([open]) > p {
   gap: 20px;
   min-width: 0;
   padding: clamp(30px, 4.4vw, 48px);
-}
-
-.contact-form-pending {
-  min-height: 520px;
 }
 
 .contact-form::before {
@@ -3033,10 +3030,18 @@ textarea:focus {
     min-height: auto;
   }
 
+  .hero-grid {
+    gap: 48px;
+  }
+
   .hero-note {
     font-size: 20px;
     margin-left: 0;
     margin-top: 20px;
+  }
+
+  .portrait-wrap::before {
+    top: -20px;
   }
 
   .manifest-section::before {
@@ -3064,6 +3069,15 @@ textarea:focus {
     padding-top: 0;
   }
 
+  .section-statement .text-block {
+    gap: 28px;
+    grid-template-columns: 1fr;
+  }
+
+  .section-statement h2 {
+    max-width: 13ch;
+  }
+
   .sparring-layout,
   .section-sparring .text-block {
     grid-template-columns: 1fr;
@@ -3087,9 +3101,10 @@ textarea:focus {
   }
 
   .experience-figure figcaption {
-    bottom: 28px;
+    bottom: auto;
     left: 24px;
     max-width: calc(100% - 48px);
+    top: 50%;
   }
 
   .experience-figure figcaption h2 {
@@ -3265,6 +3280,16 @@ textarea:focus {
     left: 14px;
     max-width: calc(100% - 28px);
     padding: 12px 14px;
+  }
+
+  .portrait-quote {
+    padding-left: 44px;
+  }
+
+  .portrait-quote::before {
+    font-size: 46px;
+    left: 14px;
+    top: 15px;
   }
 
   .hero-note {

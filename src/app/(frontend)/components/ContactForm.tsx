@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 type ContactFormProps = {
   submitLabel?: string
@@ -13,13 +13,8 @@ export function ContactForm({
   submitLabel = 'Erstgespraech anfragen',
   successMessage = 'Danke. Ihre Anfrage wurde gespeichert.',
 }: ContactFormProps) {
-  const [mounted, setMounted] = useState(false)
   const [state, setState] = useState<FormState>('idle')
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -46,10 +41,6 @@ export function ContactForm({
 
     form.reset()
     setState('success')
-  }
-
-  if (!mounted) {
-    return <div aria-hidden="true" className="contact-form contact-form-pending" />
   }
 
   return (
