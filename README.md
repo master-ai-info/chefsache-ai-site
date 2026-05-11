@@ -55,6 +55,14 @@ Der Seed legt eine Landing Page mit dem Slug `home` an.
 
 ## CMS-Copy versionieren
 
+Natuerlicher Arbeitsauftrag fuer Codex:
+
+```text
+Ich habe im CMS Texte geaendert, bitte syncen.
+```
+
+Codex soll diesen Satz als Auftrag verstehen, den aktuellen Production-CMS-Stand der Landingpage zu versionieren. Der Nutzer muss den technischen Befehl nicht kennen.
+
 Wenn Landingpage-Texte im Production-CMS angepasst und veroeffentlicht wurden, den aktuellen CMS-Stand zurueck ins Repo synchronisieren:
 
 ```bash
@@ -67,7 +75,7 @@ Der Befehl liest `landing-pages/home` von der Production-URL, entfernt technisch
 src/content/homePage.ts
 ```
 
-Danach Diff pruefen, committen und pushen. So bleibt Payload die schnelle Schreiboberflaeche, Git aber die belastbare Copy-Versionierung.
+Danach Diff pruefen, `npm run lint`, `npx tsc --noEmit` und bei Bedarf `npm run build -- --webpack` ausfuehren, dann committen und pushen. So bleibt Payload die schnelle Schreiboberflaeche, Git aber die belastbare Copy-Versionierung.
 
 ## Wichtige Befehle
 
