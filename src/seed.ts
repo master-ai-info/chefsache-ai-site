@@ -479,7 +479,179 @@ const fullModuleArticle = {
   _status: 'draft' as const,
 }
 
-const seededArticles = [manifestArticle, referenceArticle, fullModuleArticle]
+const aiJudgementArticle = {
+  articleCta: {
+    headline: 'Weiterlesen: Chefsache AI',
+    label: 'Zur Chefsache AI Übersicht',
+    target: '/#coaching',
+    text:
+      'Wenn dieser Artikel den richtigen Nerv getroffen hat, lohnt der Blick auf das Format dahinter — ein 1:1-Coaching für Inhaber, Geschäftsführer und Vorstände, die AI für ihre eigene Arbeit erschließen wollen.',
+  },
+  authorName: 'Kai Michael Schäfer',
+  authorBio:
+    'Kai Michael Schäfer ist Unternehmer seit 1997, mit zwei Exits und seit 2011 Strategieberater für Digitalisierung. Heute verbindet er diese Erfahrung mit eigener AI-Praxis — als Co-Founder von AI Transformation Partners und im Maschinenraum neuer AI-first-Geschäftsmodelle bei kms projects.',
+  authorImageSrc: '/images/kai-michael-schaefer-portrait.jpg',
+  authorRole: 'Executive AI Coach',
+  category: 'Essay · Führung & AI',
+  content: richText([
+    paragraph(
+      'Es gibt einen Moment in vielen Geschäftsführungsgesprächen, der sich inzwischen wiederholt. Irgendjemand bringt das Thema AI auf, der Tisch nickt, jemand referiert eine Konferenz oder zitiert eine McKinsey-Studie, und am Ende sind alle bestens informiert — ohne dass ein Einziger im Raum die Technologie ernsthaft selbst genutzt hätte.',
+    ),
+    paragraph('Das ist keine Boshaftigkeit. Das ist Alltag. Und es ist ein Problem.'),
+    paragraph(
+      'Über AI ist in den letzten zwei Jahren mehr gesagt, geschrieben und prognostiziert worden als über fast jede andere Technologie der Gegenwart. Wer wollte, hätte längst eine Meinung haben können. Viele haben auch eine. Nur: Eine Meinung ist nicht dasselbe wie ein Urteil. Und ein Urteil, das ausschließlich auf Konferenzbesuchen, Beraterfolien und den Erzählungen anderer beruht, trägt nicht so weit, wie es müsste — schon gar nicht bei einer Technologie, die gerade die Spielregeln umschreibt.',
+    ),
+    paragraph(
+      'Dieser Text ist kein Plädoyer für Begeisterung. Er ist ein Plädoyer für Erfahrung. Aus einem Grund, der für Inhaber und Geschäftsführer unangenehmer ist, als er auf den ersten Blick wirkt.',
+    ),
+  ]),
+  contentModules: [
+    {
+      attribution: 'Chefsache AI',
+      blockType: 'articleQuote',
+      quote:
+        'Eine Meinung ist nicht dasselbe wie ein Urteil.',
+      variant: 'compact',
+    },
+    {
+      blockType: 'articleText',
+      content: richText([
+        heading('briefen', '§ I - Trugschluss', 'Der erste Trugschluss: „Ich lasse mir das briefen.“'),
+        paragraph(
+          'Ein Geschäftsführer, der nie eine Bilanz gelesen hat, würde im Zweifel nicht über Investitionsentscheidungen abstimmen. Bei AI gilt diese Regel auf einmal nicht mehr. Hier wird gebrieft, präsentiert, eingeschätzt und entschieden — auf Basis fremder Hände, fremder Erfahrung, fremder Begeisterung. Das funktioniert eine Weile. Bei Steuerrecht funktioniert es sogar dauerhaft. Bei AI nicht.',
+        ),
+        paragraph(
+          'Der Unterschied liegt im Charakter der Technologie. AI ist kein abgegrenztes Fachgebiet, das sich delegieren lässt wie Compliance oder Lohnbuchhaltung. AI ist ein Werkzeug, das die Art verändert, wie Wissensarbeit entsteht — von der Recherche über die Analyse bis zur Kommunikation. Wer nicht selbst erlebt hat, wie sich diese Arbeit verändert, kennt die neuen Maßstäbe nicht. Und wer die Maßstäbe nicht kennt, kann den Output seines Unternehmens schlicht nicht mehr einordnen.',
+        ),
+        paragraph(
+          'Es gibt einen Satz, der das auf den Punkt bringt — und der vielen Entscheidern beim ersten Hören nicht gefällt: Wer AI nicht selbst nutzt, kann auf Dauer auch die Empfehlungen derer nicht mehr beurteilen, die es tun. Im Zweifel auch nicht die der eigenen Mitarbeitenden.',
+        ),
+        paragraph(
+          'Das ist nicht polemisch gemeint. Es ist die nüchterne Konsequenz daraus, dass eine Technologie an Reichweite gewinnt, die Standards verschiebt, ohne dass die Verschiebung in den klassischen Reportings auftaucht. Wer hier nichts tut, fällt nicht heute zurück. Er fällt zurück, ohne es zu merken.',
+        ),
+      ]),
+      kicker: 'Einordnung',
+    },
+    {
+      blockType: 'articleText',
+      content: richText([
+        heading('veraenderung', '§ II - Maßstab', 'Was sich wirklich verändert'),
+        paragraph(
+          'Die meisten Diskussionen über AI drehen sich um Tools, Anbieter und Use Cases. Das ist verständlich, aber es verfehlt den Kern. Die eigentliche Veränderung findet nicht auf der Tool-Ebene statt, sondern auf der Maßstabs-Ebene.',
+        ),
+        paragraph(
+          'Ein paar Beispiele aus der Praxis — ohne Anekdoten-Charakter, weil sie sich in nahezu jedem Unternehmen reproduzieren lassen:',
+        ),
+        paragraph(
+          'Eine fundierte Wettbewerbsanalyse, die früher zwei Tage Recherche brauchte, ist heute in 90 Minuten möglich — mit einer Qualität, die für 80 Prozent aller Geschäftsentscheidungen ausreicht. Eine Entscheidungsvorlage, deren Erstellung typischerweise eine halbe Woche kostet, lässt sich in einem strukturierten Vormittag aufsetzen, ohne dass die Tiefe leidet. Texte, Auswertungen, erste Versionen von Konzepten entstehen in Zeiträumen, die vor zwei Jahren als unrealistisch galten.',
+        ),
+        paragraph(
+          'Wer das selbst erlebt hat, sieht den eigenen Betrieb mit anderen Augen. Plötzlich wird sichtbar, wo Aufwand entsteht, der nicht mehr entstehen müsste. Wo Geschwindigkeit möglich wäre, wo heute auf Routine vertraut wird. Wo Mitarbeitende längst mit AI arbeiten — und wo sie es noch nicht tun.',
+        ),
+        paragraph(
+          'Wer es nicht selbst erlebt hat, sieht das alles nicht. Und führt das Unternehmen nach Maßstäben, die in Teilen schon nicht mehr gelten. Das ist keine Schande. Aber es ist auch nichts, womit man sich auf Dauer komfortabel einrichten sollte.',
+        ),
+      ]),
+      kicker: 'Praxis',
+    },
+    {
+      attribution: 'Kai Michael Schäfer',
+      blockType: 'articleQuote',
+      quote:
+        'Wer den Output seiner eigenen Organisation nicht mehr einschätzen kann, hat kein AI-Problem. Er hat ein Führungsproblem.',
+      variant: 'pull',
+    },
+    {
+      blockType: 'articleText',
+      content: richText([
+        heading('einwaende', '§ III - Einwände', 'Drei Einwände — und warum sie nicht tragen'),
+        paragraph(
+          'An dieser Stelle melden sich erfahrungsgemäß drei Einwände, die jede ernsthafte Auseinandersetzung mit dem Thema kennt. Sie sind nachvollziehbar. Sie tragen trotzdem nicht.',
+        ),
+        paragraph(
+          'Der erste lautet: „Dafür habe ich Mitarbeiter.“ — Stimmt. Die Frage ist nur, wer die Mitarbeiter führt, die mit AI arbeiten, wenn die Führung selbst nicht weiß, wozu AI in der Lage ist. Empfehlungen lassen sich nur dort prüfen, wo eigene Erfahrung existiert. Sonst entscheidet, wer am überzeugendsten präsentiert. Das ist selten dieselbe Person, die am klügsten geurteilt hätte.',
+        ),
+        paragraph(
+          'Der zweite lautet: „Ich habe keine Zeit.“ — Auch das stimmt. Die Frage ist nur, wofür die Zeit gerade nicht reicht. AI verändert in den ersten Wochen vor allem eines: Sie schenkt Zeit zurück. Wer drei Stunden pro Woche in eigene Praxis investiert, gewinnt nach kurzer Zeit deutlich mehr Stunden, als er hineingibt. Das ist keine Marketingaussage, sondern eine schlichte Beobachtung aus zahlreichen Coaching-Verläufen. „Keine Zeit“ ist in den meisten Fällen ein anderes Wort für „falsche Priorität“.',
+        ),
+        paragraph(
+          'Der dritte lautet: „Ich verstehe das Technische nicht.“ — Das ist der ehrlichste Einwand und gleichzeitig der irrelevanteste. Niemand verlangt, dass ein Geschäftsführer ein Sprachmodell programmiert. Verlangt wird, dass er den eigenen Arbeitsalltag mit AI durchläuft, oft genug, um ein Gefühl dafür zu entwickeln, was funktioniert, was scheitert und was nur gut klingt. Das ist keine technische, sondern eine handwerkliche Aufgabe. Und sie ist deutlich näher an dem, was Inhaber ohnehin den ganzen Tag tun, als an irgendeiner Form von IT.',
+        ),
+      ]),
+      kicker: 'Widerstand',
+    },
+    {
+      blockType: 'articleCallout',
+      headline: 'Was AI-Anwender-Kompetenz für Entscheider wirklich heißt',
+      kicker: 'Infobox',
+      text: [
+        '- Eigene wiederkehrende Aufgaben mit AI durchspielen — und zwar diejenigen, die Verantwortung tragen, nicht die nebensächlichen.',
+        '- Den Unterschied zwischen einer guten und einer schlechten AI-Antwort selbst erkennen können — was nur entsteht, wenn man oft genug beides gesehen hat.',
+        '- Eine eigene Vorstellung davon entwickeln, was im eigenen Unternehmen heute schon möglich wäre — unabhängig davon, was Berater oder Tool-Anbieter behaupten.',
+        '- Beurteilen können, ob die eigene Organisation mit AI an den richtigen Stellen schneller wird — oder nur an den sichtbaren.',
+      ].join('\n'),
+    },
+    {
+      blockType: 'articleText',
+      content: richText([
+        heading('huerde', '§ IV - Hürde', 'Was es nicht braucht'),
+        paragraph(
+          'Die Hürde, AI persönlich zu erschließen, wird in den Köpfen oft höher gebaut, als sie ist. Es braucht kein Informatikverständnis. Kein Bootcamp. Keine Sammlung von zwanzig Tools. Keine Selbsterklärung zum Tech-Enthusiasten.',
+        ),
+        paragraph(
+          'Was es braucht, ist deutlich kleiner und gleichzeitig deutlich anspruchsvoller: die Bereitschaft, sich regelmäßig — nicht täglich, aber regelmäßig — an eigenen Aufgaben mit AI auseinanderzusetzen. Nicht zur Selbstoptimierung, sondern zur Urteilsbildung.',
+        ),
+        paragraph(
+          'Die meisten Entscheider, die diesen Schritt gehen, berichten von einem ähnlichen Verlauf. Die ersten Wochen sind ungewohnt. Manches funktioniert sofort, manches enttäuscht. Dann kommt der Moment, in dem eine konkrete Aufgabe — ein Vorstandspapier, eine Kundenkommunikation, eine Auswertung — sichtbar besser oder sichtbar schneller wird. Ab diesem Punkt verändert sich nicht nur die Arbeitsweise. Es verändert sich die Sicht auf das eigene Unternehmen.',
+        ),
+        paragraph(
+          'Dass dieser Moment in einem geschützten 1:1-Format leichter eintritt als im Selbststudium, liegt weniger an der Technologie als am Charakter der Aufgabe. Wer Verantwortung trägt, will keine Fingerübungen machen. Er will an realen Themen arbeiten. Mit jemandem, der den Weg kennt, der den Markt im Blick hat und der mit Zeit, Vertraulichkeit und Substanz arbeitet — nicht mit Folien.',
+        ),
+      ]),
+      kicker: 'Schritt',
+    },
+    {
+      blockType: 'articleText',
+      content: richText([
+        heading('weiterdenken', '§ V - Einladung', 'Eine Einladung zum Weiterdenken'),
+        paragraph(
+          'Dieser Text ist absichtlich kein Plädoyer für ein bestimmtes Produkt, kein Aufruf zum schnellen Handeln, keine Beschwörung exponentieller Risiken. Er ist eine Einladung, eine unbequeme Frage einmal in Ruhe zu betrachten:',
+        ),
+        paragraph(
+          'Wenn AI in den nächsten Jahren so viele Entscheidungen beeinflusst, wie es absehbar ist — können die eigenen Entscheidungen darüber wirklich auf zweiter Hand bleiben? Auf Konferenz-Eindrücken, Berater-Folien, Mitarbeitenden-Erzählungen?',
+        ),
+        paragraph(
+          'Die meisten Inhaber und Geschäftsführer, mit denen ich darüber spreche, kommen unabhängig voneinander zum gleichen Ergebnis: Ein paar Stunden eigene, geführte Auseinandersetzung mit AI verändern die Sicht auf das eigene Unternehmen mehr als zehn weitere Konferenzen. Nicht weil die Technologie magisch wäre. Sondern weil persönliche Erfahrung etwas ermöglicht, das Information nicht leisten kann: ein eigenes Urteil.',
+        ),
+        paragraph(
+          'Wer diesen Schritt nicht allein gehen will, findet bei Chefsache AI ein Format, das genau dafür gebaut ist. Privat, vertraulich, ohne Schaulauf. An Ihren Aufgaben. In Ihrer Geschwindigkeit.',
+        ),
+        paragraph(
+          'Aber das ist die zweite Frage. Die erste lautet: Will ich mir diese Urteilsfähigkeit erschließen? Wenn die Antwort ja ist, ist die Form fast nebensächlich. Wenn die Antwort nein ist, hilft auch kein Coaching der Welt.',
+        ),
+      ]),
+      kicker: 'Fazit',
+    },
+  ],
+  excerpt:
+    'Warum Inhaber, Geschäftsführer und Vorstände um eine Aufgabe nicht herumkommen, die sich erstmal nach „nicht meine Baustelle“ anfühlt — und warum genau diese Aufgabe heute zu den wichtigsten gehört.',
+  heroImageCaption:
+    'Chefsache AI · Eigene Urteilsfähigkeit entsteht nicht im Briefing, sondern in der Anwendung.',
+  heroImageSrc: '/images/executive-woman-ai-judgement-window.png',
+  publishedAt: '2026-05-11T00:00:00.000Z',
+  readingTime: '9 min',
+  seo: {
+    description:
+      'Warum Geschäftsführer und Inhaber AI nicht delegieren können — und was es wirklich heißt, sich diese Technologie persönlich zu erschließen.',
+    title: 'AI verstehen, bevor man darüber entscheidet. - Chefsache AI',
+  },
+  slug: 'ai-verstehen-bevor-man-entscheidet',
+  status: 'published' as const,
+  title: 'AI verstehen, bevor man darüber entscheidet.',
+  _status: 'published' as const,
+}
+
+const seededArticles = [manifestArticle, referenceArticle, fullModuleArticle, aiJudgementArticle]
 
 const legalPages = [
   {

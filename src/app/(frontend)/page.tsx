@@ -30,6 +30,15 @@ type CmsLandingPage = {
   sections?: readonly CmsBlock[]
 }
 
+type LatestArticle = {
+  category?: string | null
+  excerpt: string
+  publishedAt?: string | null
+  readingTime?: string | null
+  slug: string
+  title: string
+}
+
 const fallbackPage: CmsLandingPage = homePage
 
 async function getLandingPage(): Promise<CmsLandingPage> {
@@ -50,6 +59,35 @@ async function getLandingPage(): Promise<CmsLandingPage> {
   } catch (error) {
     console.warn('Falling back to static homepage content.', error)
     return fallbackPage
+  }
+}
+
+async function getLatestArticles(): Promise<LatestArticle[]> {
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'articles',
+      depth: 0,
+      limit: 4,
+      sort: '-publishedAt',
+      where: {
+        status: {
+          equals: 'published',
+        },
+      },
+    })
+
+    return result.docs.map((article) => ({
+      category: article.category,
+      excerpt: article.excerpt,
+      publishedAt: article.publishedAt,
+      readingTime: article.readingTime,
+      slug: article.slug,
+      title: article.title,
+    }))
+  } catch (error) {
+    console.warn('Could not load latest articles for homepage.', error)
+    return []
   }
 }
 
@@ -80,15 +118,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const page = await getLandingPage()
-  const sections = page.sections?.length ? page.sections : fallbackPage.sections || []
+  const [page, latestArticles] = await Promise.all([getLandingPage(), getLatestArticles()])
+  const sourceSections = page.sections?.length ? page.sections : fallbackPage.sections || []
+  const sections = withArticleTeaserSection(sourceSections, latestArticles)
 
   return (
     <>
       <SiteHeader />
       <main>
         {sections.map((block, index) => (
-          <BlockRenderer block={block} index={index} key={`${block.blockType}-${index}`} />
+          <BlockRenderer
+            block={block}
+            index={index}
+            key={`${block.blockType}-${index}`}
+            latestArticles={latestArticles}
+          />
         ))}
       </main>
       <SiteFooter />
@@ -96,7 +140,36 @@ export default async function HomePage() {
   )
 }
 
-function BlockRenderer({ block, index }: { block: CmsBlock; index: number }) {
+function withArticleTeaserSection(sections: readonly CmsBlock[], latestArticles: LatestArticle[]) {
+  if (sections.some((section) => section.blockType === 'articleTeasers') || latestArticles.length === 0) {
+    return sections
+  }
+
+  const teaserBlock: CmsBlock = {
+    blockType: 'articleTeasers',
+    headline: 'Neueste Essays aus Chefsache AI.',
+    intro:
+      'Redaktionelle Einordnungen für Entscheider, die AI nicht nur delegieren, sondern beurteilen wollen.',
+    kicker: 'Essays',
+  }
+  const insertIndex = sections.findIndex((section) => section.blockType === 'faq')
+
+  if (insertIndex === -1) {
+    return [...sections, teaserBlock]
+  }
+
+  return [...sections.slice(0, insertIndex), teaserBlock, ...sections.slice(insertIndex)]
+}
+
+function BlockRenderer({
+  block,
+  index,
+  latestArticles,
+}: {
+  block: CmsBlock
+  index: number
+  latestArticles: LatestArticle[]
+}) {
   switch (block.blockType) {
     case 'hero':
       return <HeroBlock block={block} />
@@ -115,7 +188,7 @@ function BlockRenderer({ block, index }: { block: CmsBlock; index: number }) {
     case 'testimonials':
       return <TestimonialsBlock block={block} index={index} />
     case 'articleTeasers':
-      return <ArticleTeasersBlock block={block} index={index} />
+      return <ArticleTeasersBlock articles={latestArticles} block={block} index={index} />
     case 'faq':
       return <FAQBlock block={block} index={index} />
     case 'cta':
@@ -431,21 +504,35 @@ function TestimonialsBlock({ block, index }: { block: CmsBlock; index: number })
   )
 }
 
-function ArticleTeasersBlock({ block, index }: { block: CmsBlock; index: number }) {
-  const articles =
-    (block.articles as {
-      category?: string
-      excerpt?: string
-      readingTime?: string
-      target?: string
-      title?: string
-    }[] | undefined) || []
+function ArticleTeasersBlock({
+  articles,
+  block,
+  index,
+}: {
+  articles: LatestArticle[]
+  block: CmsBlock
+  index: number
+}) {
+  if (articles.length === 0) {
+    return null
+  }
+  const headline = String(block.headline || '')
+  const intro = String(block.intro || '')
+  const introBlock = {
+    ...block,
+    headline: headline.toLowerCase() === 'artikelvorschläge' ? 'Neueste Artikel' : headline || 'Neueste Artikel',
+    intro: intro.toLowerCase().includes('vertiefende texte')
+      ? 'Die jüngsten Veröffentlichungen für Entscheider, die den Gedanken hinter Chefsache AI weiter prüfen wollen.'
+      : intro ||
+        'Die jüngsten Veröffentlichungen für Entscheider, die den Gedanken hinter Chefsache AI weiter prüfen wollen.',
+    kicker: block.kicker || 'Essays',
+  }
 
   return (
     <section className="section section-articles shell">
       <span className="giant-numeral">{String(index).padStart(2, '0')}</span>
       <SectionTag index={index} label={block.kicker || 'Essays'} />
-      <SectionIntro block={block} />
+      <SectionIntro block={introBlock} />
       <div className="related-grid article-teaser-grid">
         {articles.map((article, articleIndex) => {
           const content = (
@@ -455,24 +542,34 @@ function ArticleTeasersBlock({ block, index }: { block: CmsBlock; index: number 
               <h3>{article.title}</h3>
               {article.excerpt ? <p>{article.excerpt}</p> : null}
               <div className="meta">
-                <span>{article.readingTime || 'Konzept'}</span>
+                <span>{formatDate(article.publishedAt)}</span>
+                <span className="sep">·</span>
+                <span>{article.readingTime || '5 min'}</span>
               </div>
             </>
           )
 
-          return article.target ? (
-            <a className="rel-card" href={article.target} key={articleIndex}>
+          return (
+            <a className="rel-card" href={`/essays/${article.slug}`} key={article.slug}>
               {content}
             </a>
-          ) : (
-            <article className="rel-card" key={articleIndex}>
-              {content}
-            </article>
           )
         })}
       </div>
     </section>
   )
+}
+
+function formatDate(value?: string | null) {
+  if (!value) {
+    return 'Aktuell'
+  }
+
+  return new Intl.DateTimeFormat('de-DE', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(value))
 }
 
 function CTABlock({ block, index }: { block: CmsBlock; index: number }) {

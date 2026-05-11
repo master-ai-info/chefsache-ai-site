@@ -232,9 +232,9 @@ export const homePage = {
     },
     {
       kicker: 'Essays',
-      headline: 'Artikelvorschläge',
+      headline: 'Neueste Artikel',
       intro:
-        'Vertiefende Texte für Entscheider, die den Gedanken hinter Chefsache AI weiter prüfen wollen.',
+        'Die jüngsten Veröffentlichungen für Entscheider, die den Gedanken hinter Chefsache AI weiter prüfen wollen.',
       articles: [
         {
           category: 'Essay · Urteilsfähigkeit',

@@ -2530,6 +2530,10 @@ textarea:focus {
   padding: clamp(28px, 4vw, 44px);
 }
 
+.article-module-callout p {
+  white-space: pre-line;
+}
+
 .article-module-inline-cta {
   align-items: end;
   background: linear-gradient(180deg, var(--bg-card), var(--bg));

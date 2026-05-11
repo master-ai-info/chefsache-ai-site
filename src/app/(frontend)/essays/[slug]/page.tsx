@@ -50,8 +50,10 @@ const fallbackRelated = [
 
 async function getArticle(slug: string): Promise<Article | null> {
   const payload = await getPayload({ config })
+  const includeDrafts = process.env.NODE_ENV !== 'production'
   const result = await payload.find({
     collection: 'articles',
+    draft: includeDrafts,
     depth: 2,
     limit: 1,
     where: {
@@ -61,11 +63,15 @@ async function getArticle(slug: string): Promise<Article | null> {
             equals: slug,
           },
         },
-        {
-          status: {
-            equals: 'published',
-          },
-        },
+        ...(includeDrafts
+          ? []
+          : [
+              {
+                status: {
+                  equals: 'published',
+                },
+              },
+            ]),
       ],
     },
   })
