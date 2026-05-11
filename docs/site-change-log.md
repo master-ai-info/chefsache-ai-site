@@ -95,16 +95,16 @@ Naechster Schritt: Optional spaeter echte geschuetzte Production-Draft-Preview u
 ```
 
 ```text
-Status: Related Articles im Artikeltemplate lokal dynamisiert.
+Status: Related Articles im Artikeltemplate veroeffentlicht.
 Arbeitsfokus: Statische Platzhalter unter Essays entfernen.
 Geaendert: Der Related-Block unter Artikeln nutzt zuerst gepflegte relatedArticles und faellt sonst auf die neuesten published Articles aus Payload zurueck; der aktuelle Artikel wird ausgeschlossen; bei fehlenden echten Artikeln wird der Block ausgeblendet statt Platzhalter zu zeigen.
 Geaendert in: src/app/(frontend)/essays/[slug]/page.tsx.
 Quelle der Wahrheit: Git fuer Rendering-Logik; Production Payload CMS fuer Article-Daten.
-Live gestellt: Nein. Codefix ist lokal geprueft, aber noch nicht committed/gepusht/deployed.
-Geprueft: npm run lint (nur bestehende Migrations-Warnungen); npx tsc --noEmit; npm run build -- --webpack; lokale Browserpruefung unter /essays/ai-verstehen-bevor-man-entscheidet mit dynamischer Related-Headline, echtem Article-Link und ohne alte Platzhalter.
-Offen: Nutzerfreigabe fuer Commit/Push/Deploy.
-Risiken: Bis zum Deploy zeigt Production unter Artikeln weiter den statischen Platzhalterblock.
-Naechster Schritt: Nach Freigabe sauber veroeffentlichen.
+Live gestellt: Ja. Commit 03ea1fe wurde auf main gepusht und per Vercel Auto-Deploy auf Production veroeffentlicht.
+Geprueft: npm run lint (nur bestehende Migrations-Warnungen); npx tsc --noEmit; npm run build -- --webpack; lokale Browserpruefung unter /essays/ai-verstehen-bevor-man-entscheidet; Production-HTML enthaelt die dynamische Related-Headline, keinen alten Platzhaltertext und den echten Article-Link; Browsercheck live ohne Console Errors; Production Articles-API und Landingpages-API liefern HTTP 200.
+Offen: Keine akute Aufgabe fuer diese Aenderung.
+Risiken: Bei nur einem veroeffentlichten Artikel wird der Related-Block leer bzw. ausgeblendet; ab zwei veroeffentlichten Artikeln entstehen echte Empfehlungen.
+Naechster Schritt: Beim naechsten Artikel pruefen, ob explizite relatedArticles im CMS gepflegt werden sollen oder die automatische Sortierung reicht.
 ```
 
 ## Vorlage fuer neue Eintraege
